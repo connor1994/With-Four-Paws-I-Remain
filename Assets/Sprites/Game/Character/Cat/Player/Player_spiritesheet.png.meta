@@ -505,6 +505,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Player_spiritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43362e4afb4972d4da2f7c3f882eff04
+      internalID: 1892796482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_spiritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a4a0eb30dd2bda428692a62eb31379b
+      internalID: -693241088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_spiritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c5d0e6f527b27743a2c5e017cc46cb5
+      internalID: 500151133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -518,6 +581,7 @@ TextureImporter:
     nameFileIdTable:
       Player_spiritesheet_14: -901844433
       Player_spiritesheet_15: 467303823
+      Player_spiritesheet_19: -693241088
       Player_spiritesheet_10: 1171827577
       Player_spiritesheet_13: -372560726
       Player_spiritesheet_5: 816811569
@@ -529,11 +593,13 @@ TextureImporter:
       Player_spiritesheet_3: 1367116478
       Player_spiritesheet_12: -500367607
       Player_spiritesheet_16: 1845837355
+      Player_spiritesheet_20: 500151133
       Player_spiritesheet_8: -1954973594
       Player_spiritesheet_6: 2066154324
       Player_spiritesheet_2: -1783092154
       Player_spiritesheet_1: 1907777727
       Player_spiritesheet_0: -2085935679
+      Player_spiritesheet_18: 1892796482
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
