@@ -216,6 +216,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1314428658}
     m_Modifications:
+    - target: {fileID: -938320577744280909, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4135710812633348953, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
       propertyPath: m_Camera
       value: 
@@ -224,6 +232,46 @@ PrefabInstance:
       propertyPath: m_UIInputModule
       value: 
       objectReference: {fileID: 8934511593176841372}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionId
+      value: 7dbf30c1-5b79-401d-be81-156cd54cdc6e
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionName
+      value: Game/Run[/Keyboard/shift]
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1622278094}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Run
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WFPIR.Game.PlayerController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937445402786150489, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5992335071956884283, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
       propertyPath: m_Name
       value: Player_prefab
@@ -3214,7 +3262,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452062416}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.5, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3247,6 +3295,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a8a05de0ac134f4f9d01bef6b9da077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1622278094 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5339241347311587206, guid: 2d1c95caf8be1da4dafe99dd6072a7cc, type: 3}
+  m_PrefabInstance: {fileID: 380582719}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 882771e80905f3943ad2725f2464f7ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2001416815
@@ -3303,7 +3362,7 @@ MonoBehaviour:
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
-  m_ScreenY: 0.75
+  m_ScreenY: 0.5
   m_CameraDistance: 10
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0

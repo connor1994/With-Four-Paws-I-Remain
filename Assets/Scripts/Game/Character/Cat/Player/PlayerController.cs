@@ -8,14 +8,15 @@ namespace WFPIR.Game
 {
     public class PlayerController : MonoBehaviour
     {
-        private PlayerInput playerInput { get; set; } // for switching action maps
         private Rigidbody2D playerRigidbody;
         private Animator animator;
         private string animationState;
-        private bool moving;
         private float movementSpeed = 7f;
         private Vector2 movementInput;
         private bool isGrounded;
+        private bool jumping;
+        private bool running;
+        private float jumpForce = 10f;
 
         private void Awake()
         {
@@ -24,17 +25,50 @@ namespace WFPIR.Game
 
         private void GetReferences()
         {
-            playerInput = GetComponent<PlayerInput>();
             playerRigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
         }
 
-        public void Jump(InputAction.CallbackContext context)
+        public void BeginJump(InputAction.CallbackContext context)
         {
-            if (!isGrounded) return;
+            if (!isGrounded || IsMoving()) return;
 
-            playerRigidbody.velocity += new Vector2(0, 5);
-            print("jump");
+            if (context.performed)
+            {
+                jumping = true;
+
+                PlayPlayerAnimation("Player_Jump_anim");
+            }
+        }
+
+        public void Jump()
+        {
+            if (transform.eulerAngles.y == 180)
+            {
+                playerRigidbody.AddForce((Vector2.up + Vector2.left) * jumpForce, ForceMode2D.Impulse);
+                print("jump left");
+            }
+            else if (transform.eulerAngles.y == 0)
+            {
+                playerRigidbody.AddForce((Vector2.up + Vector2.right) * jumpForce, ForceMode2D.Impulse);
+            }
+        }
+
+        public void Run(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                running = true;
+                movementSpeed = 10f;
+                print("running");
+                PlayPlayerAnimation("Player_Run_anim");
+            }
+            else if (context.canceled)
+            {
+                running = false;
+                print("Stopped running");
+                movementSpeed = 7f;
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -50,6 +84,11 @@ namespace WFPIR.Game
             if (collision.transform.tag == "Environment")
             {
                 isGrounded = false;
+
+                if (jumping)
+                {
+                    jumping = false;
+                }
             }
         }
 
@@ -60,20 +99,20 @@ namespace WFPIR.Game
 
         private void Movement()
         {
+            if (!isGrounded || jumping) return;
+
             if (!IsMoving())
             {
                 IdleAnimationHandler();
                 return;
             }
 
-            MovementAnimationHandler();
+            MovementRotationHandler();
 
             Vector3 movementDirection = new Vector3(movementInput.x, 0, 0);
             movementDirection = movementDirection * movementSpeed * Time.deltaTime;
 
-            playerRigidbody.MovePosition(transform.position + movementDirection);
-
-            //transform.position += movementDirection;
+            playerRigidbody.transform.position += movementDirection;
         }
 
         public bool IsMoving()
@@ -93,26 +132,26 @@ namespace WFPIR.Game
             movementInput = context.ReadValue<Vector2>();
         }
 
-        private void MovementAnimationHandler()
+        private void MovementRotationHandler()
         {
             if (movementInput == Vector2.left)
             {
-                animator.transform.rotation = new Quaternion(0, 180, 0, 0);
-                PlayPlayerAnimation("Player_Walk_anim");
+                transform.rotation = new Quaternion(0, 180, 0, 0);
             }
             else if (movementInput == Vector2.right)
             {
-                animator.transform.rotation = new Quaternion(0, 0, 0, 0);
+                transform.rotation = new Quaternion(0, 0, 0, 0);
+            }
+
+            if (!running)
+            {
                 PlayPlayerAnimation("Player_Walk_anim");
             }
         }
 
         private void IdleAnimationHandler()
         {
-            if (animationState == "Player_Walk_anim")
-            {
-                PlayPlayerAnimation("Player_Idle_Variant_0_anim");
-            }
+            PlayPlayerAnimation("Player_Idle_Variant_0_anim");
         }
 
         public void PlayPlayerAnimation(string newAnimationState)
