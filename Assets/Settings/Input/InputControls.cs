@@ -42,7 +42,7 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
                     ""id"": ""da7e9866-c029-4e98-adf2-b3bdefdd493d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press"",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -51,7 +51,7 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
                     ""id"": ""7dbf30c1-5b79-401d-be81-156cd54cdc6e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": ""Hold(duration=0.1)"",
                     ""initialStateCheck"": false
                 }
             ],

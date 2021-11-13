@@ -31,9 +31,9 @@ namespace WFPIR.Game
 
         public void BeginJump(InputAction.CallbackContext context)
         {
-            if (!isGrounded || IsMoving()) return;
+            if (!isGrounded) return;
 
-            if (context.performed)
+            if (context.canceled)
             {
                 jumping = true;
 
@@ -58,16 +58,27 @@ namespace WFPIR.Game
         {
             if (context.performed)
             {
-                running = true;
-                movementSpeed = 10f;
-                print("running");
-                PlayPlayerAnimation("Player_Run_anim");
+                StartRun(true);
             }
             else if (context.canceled)
             {
+                StartRun(false);
+            }
+        }
+
+        private void StartRun(bool startRun)
+        {
+            if (startRun)
+            {
+                running = true;
+                movementSpeed = 10f;
+                jumpForce = 12f;
+            }
+            else
+            {
                 running = false;
-                print("Stopped running");
                 movementSpeed = 7f;
+                jumpForce = 10f;
             }
         }
 
@@ -101,23 +112,26 @@ namespace WFPIR.Game
         {
             if (!isGrounded || jumping) return;
 
-            if (!IsMoving())
+            if (IsInputIdle())
             {
+                StartRun(false);
                 IdleAnimationHandler();
                 return;
             }
 
-            MovementRotationHandler();
+            ProcessInputRotation();
 
             Vector3 movementDirection = new Vector3(movementInput.x, 0, 0);
             movementDirection = movementDirection * movementSpeed * Time.deltaTime;
 
-            playerRigidbody.transform.position += movementDirection;
+            transform.position += movementDirection;
+
+            AnimationMovementHandler();
         }
 
-        public bool IsMoving()
+        private bool IsInputIdle()
         {
-            if (movementInput == Vector2.left || movementInput == Vector2.right)
+            if (movementInput == Vector2.zero)
             {
                 return true;
             }
@@ -127,26 +141,33 @@ namespace WFPIR.Game
             }
         }
 
-        public void ProcessMovementInput(InputAction.CallbackContext context)
+        private void ProcessInputRotation()
         {
-            movementInput = context.ReadValue<Vector2>();
-        }
-
-        private void MovementRotationHandler()
-        {
-            if (movementInput == Vector2.left)
-            {
-                transform.rotation = new Quaternion(0, 180, 0, 0);
-            }
-            else if (movementInput == Vector2.right)
+            if (movementInput == Vector2.right)
             {
                 transform.rotation = new Quaternion(0, 0, 0, 0);
             }
+            else if (movementInput == Vector2.left)
+            {
+                transform.rotation = new Quaternion(0, 180, 0, 0);
+            }
+        }
 
+        private void AnimationMovementHandler()
+        {
             if (!running)
             {
                 PlayPlayerAnimation("Player_Walk_anim");
             }
+            else
+            {
+                PlayPlayerAnimation("Player_Run_anim");
+            }
+        }
+
+        public void ProcessMovementInput(InputAction.CallbackContext context)
+        {
+            movementInput = context.ReadValue<Vector2>();
         }
 
         private void IdleAnimationHandler()
