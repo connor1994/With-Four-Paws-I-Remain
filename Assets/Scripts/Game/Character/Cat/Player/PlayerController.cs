@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using WFPIR.Utility;
+using Random = UnityEngine.Random;
 
 namespace WFPIR.Game
 {
     public class PlayerController : MonoBehaviour
     {
+        private UtilityHelper utilityHelper;
         private Rigidbody2D playerRigidbody;
         private Animator animator;
         private string animationState;
@@ -15,8 +19,10 @@ namespace WFPIR.Game
         private Vector2 movementInput;
         private bool isGrounded;
         private bool jumping;
+        private bool holdingJump;
         private bool running;
-        private float jumpForce = 10f;
+        private bool isIdle;
+        private float jumpForce = 8f;
 
         private void Awake()
         {
@@ -25,20 +31,60 @@ namespace WFPIR.Game
 
         private void GetReferences()
         {
+            utilityHelper = GetComponent<UtilityHelper>();
             playerRigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
         }
 
         public void BeginJump(InputAction.CallbackContext context)
         {
-            if (!isGrounded) return;
+            if (!isGrounded || jumping) return;
+
+            CancelIdling();
 
             if (context.canceled)
             {
-                jumping = true;
-
-                PlayPlayerAnimation("Player_Jump_anim");
+                if (!holdingJump)
+                {
+                    jumping = true;
+                    ResetAnimationState();
+                    PlayPlayerAnimation("Player_Jump_anim");
+                }
+                else
+                {
+                    StopCoroutine(ChargeJump());
+                }
             }
+            else if (context.performed)
+            {
+                print("performed");
+
+                jumpForce = 12f;
+
+                StartCoroutine(ChargeJump());
+            }
+        }
+
+        IEnumerator ChargeJump()
+        {
+            holdingJump = true;
+
+            ResetAnimationState();
+            PlayPlayerAnimation("Player_Jump_anim", 0.1f, true);
+
+            yield return new WaitForSeconds(0.25f);
+
+            print("first charge");
+
+            ResetAnimationState();
+            PlayPlayerAnimation("Player_Jump_anim", 0.2f, true);
+
+            yield return new WaitForSeconds(0.25f);
+
+            print("second charge");
+            jumping = true;
+            ResetAnimationState();
+            PlayPlayerAnimation("Player_Jump_anim", 0.3f);
         }
 
         public void Jump()
@@ -46,12 +92,18 @@ namespace WFPIR.Game
             if (transform.eulerAngles.y == 180)
             {
                 playerRigidbody.AddForce((Vector2.up + Vector2.left) * jumpForce, ForceMode2D.Impulse);
-                print("jump left");
             }
             else if (transform.eulerAngles.y == 0)
             {
                 playerRigidbody.AddForce((Vector2.up + Vector2.right) * jumpForce, ForceMode2D.Impulse);
             }
+
+            ResetJumpForce();
+        }
+
+        private void ResetJumpForce()
+        {
+            jumpForce = 8f;
         }
 
         public void Run(InputAction.CallbackContext context)
@@ -99,6 +151,11 @@ namespace WFPIR.Game
                 if (jumping)
                 {
                     jumping = false;
+
+                    if (holdingJump)
+                    {
+                        holdingJump = false;
+                    }
                 }
             }
         }
@@ -110,7 +167,7 @@ namespace WFPIR.Game
 
         private void Movement()
         {
-            if (!isGrounded || jumping) return;
+            if (!isGrounded || jumping || holdingJump) return;
 
             if (IsInputIdle())
             {
@@ -118,6 +175,8 @@ namespace WFPIR.Game
                 IdleAnimationHandler();
                 return;
             }
+
+            isIdle = false;
 
             ProcessInputRotation();
 
@@ -172,19 +231,44 @@ namespace WFPIR.Game
 
         private void IdleAnimationHandler()
         {
-            PlayPlayerAnimation("Player_Idle_Variant_0_anim");
+            if (!isIdle)
+            {
+                PlayPlayerAnimation("Player_Idle_Variant_0_anim");
+            }
         }
 
-        public void PlayPlayerAnimation(string newAnimationState)
+        private void CancelIdling()
         {
-            if (animationState == newAnimationState) return;
+            if (isIdle)
+            {
+                isIdle = false;
+            }
+        }
 
-            animator.Play(newAnimationState);
+        public void PlayPlayerAnimation(string animationToPlay, float atTime = 0, bool shouldPause = false)
+        {
+            if (animationState == animationToPlay) return;
 
-            animationState = newAnimationState;
+            animator.Play(animationToPlay, 0, atTime);
+
+            if (shouldPause)
+            {
+                animator.speed = 0;
+            }
+            else
+            {
+                if (animator.speed == 0)
+                {
+                    animator.speed = 1;
+                }
+            }
+
+            animationState = animationToPlay;
+        }
+
+        private void ResetAnimationState()
+        {
+            animationState = null;
         }
     }
-
-
-
 }
