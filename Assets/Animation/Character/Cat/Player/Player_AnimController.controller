@@ -99,14 +99,14 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-3468057743257202911
+--- !u!1102 &-3784722358815328301
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Falling_anim
+  m_Name: Player_Landing_anim
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -119,7 +119,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2732cac909bb2c14daa668764ea1d7e3, type: 2}
+  m_Motion: {fileID: 7400000, guid: c1f99d0e2a4902a42bca2798af877848, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -293,19 +293,16 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -213833252181233502}
-    m_Position: {x: -180, y: 540, z: 0}
+    m_Position: {x: -180, y: 510, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8048570528838870290}
-    m_Position: {x: -180, y: 590, z: 0}
+    m_Position: {x: -180, y: 570, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5072524018446556791}
     m_Position: {x: 30, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7738540315236737419}
-    m_Position: {x: 260, y: 530, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -3468057743257202911}
-    m_Position: {x: 260, y: 580, z: 0}
+    m_Position: {x: 250, y: 570, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2212111414260809440}
     m_Position: {x: -180, y: 440, z: 0}
@@ -315,6 +312,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 769551650207835052}
     m_Position: {x: 250, y: 440, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -3784722358815328301}
+    m_Position: {x: 250, y: 510, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

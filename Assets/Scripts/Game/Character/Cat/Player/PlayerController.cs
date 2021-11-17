@@ -17,12 +17,11 @@ namespace WFPIR.Game
         private string animationState;
         private float movementSpeed = 7f;
         private Vector2 movementInput;
-        private bool isGrounded;
-        private bool jumping;
+        private bool isGrounded = true;
         private bool holdingJump;
         private bool running;
         private bool isIdle;
-        private float jumpForce = 8f;
+        private float jumpForce = 10f;
 
         private void Awake()
         {
@@ -36,29 +35,55 @@ namespace WFPIR.Game
             animator = GetComponent<Animator>();
         }
 
+        private void FixedUpdate()
+        {
+            Movement();
+        }
+
+        private void Movement()
+        {
+            if (holdingJump || !isGrounded) return;
+
+            if (IsInputIdle())
+            {
+                StartRun(false);
+
+                SetIdle();
+            }
+            else if (IsInputMoving())
+            {
+                isIdle = false;
+
+                Vector3 movementDirection = new Vector3(movementInput.x, 0, 0);
+                movementDirection = movementDirection * movementSpeed * Time.deltaTime;
+
+                transform.position += movementDirection;
+
+                AnimationMovementHandler();
+            }
+        }
+
         public void BeginJump(InputAction.CallbackContext context)
         {
-            if (!isGrounded || jumping) return;
-
-            CancelIdling();
+            if (!isGrounded) return;
 
             if (context.canceled)
             {
                 if (!holdingJump)
                 {
-                    jumping = true;
-                    ResetAnimationState();
+                    Jump();
+
                     PlayPlayerAnimation("Player_Jump_anim");
                 }
                 else
                 {
+                    holdingJump = false;
+
                     StopCoroutine(ChargeJump());
                 }
             }
             else if (context.performed)
             {
-                print("performed");
-
                 jumpForce = 12f;
 
                 StartCoroutine(ChargeJump());
@@ -74,21 +99,24 @@ namespace WFPIR.Game
 
             yield return new WaitForSeconds(0.25f);
 
-            print("first charge");
-
             ResetAnimationState();
             PlayPlayerAnimation("Player_Jump_anim", 0.2f, true);
 
             yield return new WaitForSeconds(0.25f);
 
-            print("second charge");
-            jumping = true;
             ResetAnimationState();
+
+            Jump();
+
             PlayPlayerAnimation("Player_Jump_anim", 0.3f);
+
+            holdingJump = false;
         }
 
         public void Jump()
         {
+            isGrounded = false;
+
             if (transform.eulerAngles.y == 180)
             {
                 playerRigidbody.AddForce((Vector2.up + Vector2.left) * jumpForce, ForceMode2D.Impulse);
@@ -103,11 +131,13 @@ namespace WFPIR.Game
 
         private void ResetJumpForce()
         {
-            jumpForce = 8f;
+            jumpForce = 10f;
         }
 
         public void Run(InputAction.CallbackContext context)
         {
+            if (!isGrounded) return;
+
             if (context.performed)
             {
                 StartRun(true);
@@ -138,8 +168,16 @@ namespace WFPIR.Game
         {
             if (collision.transform.tag == "Environment")
             {
-                isGrounded = true;
+                if (!isGrounded)
+                {
+                    PlayPlayerAnimation("Player_Landing_anim");
+                }
             }
+        }
+
+        public void Land()
+        {
+            isGrounded = true;
         }
 
         private void OnCollisionExit2D(Collision2D collision)
@@ -147,45 +185,7 @@ namespace WFPIR.Game
             if (collision.transform.tag == "Environment")
             {
                 isGrounded = false;
-
-                if (jumping)
-                {
-                    jumping = false;
-
-                    if (holdingJump)
-                    {
-                        holdingJump = false;
-                    }
-                }
             }
-        }
-
-        private void FixedUpdate()
-        {
-            Movement();
-        }
-
-        private void Movement()
-        {
-            if (!isGrounded || jumping || holdingJump) return;
-
-            if (IsInputIdle())
-            {
-                StartRun(false);
-                IdleAnimationHandler();
-                return;
-            }
-
-            isIdle = false;
-
-            ProcessInputRotation();
-
-            Vector3 movementDirection = new Vector3(movementInput.x, 0, 0);
-            movementDirection = movementDirection * movementSpeed * Time.deltaTime;
-
-            transform.position += movementDirection;
-
-            AnimationMovementHandler();
         }
 
         private bool IsInputIdle()
@@ -200,15 +200,23 @@ namespace WFPIR.Game
             }
         }
 
-        private void ProcessInputRotation()
+        private bool IsInputMoving()
         {
             if (movementInput == Vector2.right)
             {
                 transform.rotation = new Quaternion(0, 0, 0, 0);
+
+                return true;
             }
             else if (movementInput == Vector2.left)
             {
                 transform.rotation = new Quaternion(0, 180, 0, 0);
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -229,20 +237,14 @@ namespace WFPIR.Game
             movementInput = context.ReadValue<Vector2>();
         }
 
-        private void IdleAnimationHandler()
+        private void SetIdle()
         {
             if (!isIdle)
             {
                 PlayPlayerAnimation("Player_Idle_Variant_0_anim");
             }
-        }
 
-        private void CancelIdling()
-        {
-            if (isIdle)
-            {
-                isIdle = false;
-            }
+            isIdle = true;
         }
 
         public void PlayPlayerAnimation(string animationToPlay, float atTime = 0, bool shouldPause = false)
